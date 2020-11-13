@@ -1206,9 +1206,11 @@ class agileMantisPlugin extends MantisPlugin {
 					|| $user[0]['developer'] == 1
 					|| $user[0]['administrator'] == 1 ) {
 
-				$menu[2] =  '<a href="' .
-						plugin_page("product_backlog.php") .
-						'" class="agile_menu">Product Backlog</a>';
+                    $menu[2] = array(
+                         'title' => 'Product Backlog',
+                         'icon'    => 'fa-spinner',
+                         'url'     => plugin_page( 'product_backlog.php' )
+                    );
 			}
 
 			# add sprint backlog or taskboard menu item
@@ -1216,15 +1218,20 @@ class agileMantisPlugin extends MantisPlugin {
 					|| $user[0]['developer'] == 1
 					|| $user[0]['administrator'] == 1 ) {
 
-					$menu[0] =  '<a href="' . plugin_page( "sprint_backlog.php" ) .
-						'" class="agile_menu">Sprint Backlog</a>';
-
+                         $menu[0] = array(
+                              'title' => 'Sprint Backlog',
+                              'icon'    => 'fa-spinner',
+                              'url'     => plugin_page( 'sprint_backlog.php' )
+                         );
 			}
 
 			# add agileMantis menu item
 			if( current_user_is_administrator() || $user[0]['administrator'] == 1 ) {
-				$menu[3] =  '<a href="' . plugin_page( "info.php" ) .
-					'" class="agile_menu">agileMantis</a>';
+                    $menu[3] = array(
+                         'title' => 'agileMantis',
+                         'icon'    => 'fa-spinner',
+                         'url'     => plugin_page( 'info.php' )
+                    );
 			}
 
 			return $menu;
