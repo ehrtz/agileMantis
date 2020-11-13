@@ -643,7 +643,7 @@ class agileMantisPlugin extends MantisPlugin {
 	 * Get's executed after the normal schema upgrade process has executed.
 	 * This gives the plugin the chance to convert or normalize data after an upgrade
 	 */
-	function upgrade() {
+	function upgrade( $schema ) {
 
 		plugin_config_set( 'gadiv_agilemantis_version', $this->version = "2.2.2" );
 
@@ -1220,7 +1220,7 @@ class agileMantisPlugin extends MantisPlugin {
 						'" class="agile_menu">Sprint Backlog</a>';
 
 			}
-			
+
 			# add agileMantis menu item
 			if( current_user_is_administrator() || $user[0]['administrator'] == 1 ) {
 				$menu[3] =  '<a href="' . plugin_page( "info.php" ) .
@@ -1328,7 +1328,7 @@ class agileMantisPlugin extends MantisPlugin {
 			if( !config_is_set( 'plugin_agileMantis_gadiv_userstory_unit_mode' ) ) {
 				config_set( 'plugin_agileMantis_gadiv_userstory_unit_mode', 'h' );
 			}
-			
+
 			if( !config_is_set( 'plugin_agileMantis_gadiv_daily_scrum' ) ) {
 				config_set( 'plugin_agileMantis_gadiv_daily_scrum', 0 );
 			}
