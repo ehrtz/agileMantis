@@ -358,12 +358,12 @@ class agileMantisPlugin extends MantisPlugin {
 
                     // block #21 accessrights for teamuser in projects must be developer (55)
                     array( 'UpdateSQL',
-                    array( 'mantis_project_user_list_table' , "
+                    array( db_get_table( 'project_user_list' ) , "
                     SET access_level=55
                     WHERE user_id IN (
 				    SELECT id
-				    FROM mantis_user_table
-				    WHERE username LIKE 'Team-User-%')
+				    FROM " . db_get_table( 'user' )
+				    . " WHERE username LIKE 'Team-User-%')
                     " ) ),
 
                     /*** Updates for agileMantis 2.1 ***/
