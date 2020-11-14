@@ -1,7 +1,7 @@
 <?php
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -9,7 +9,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -25,8 +25,13 @@
 # along with agileMantis. If not, see <http://www.gnu.org/licenses/>.
 
 ini_set("display_errors",1);
-	
-	html_page_top( plugin_lang_get( 'manage_availability_title' ) ); 
+
+layout_page_header( plugin_lang_get( 'manage_availability_title' ) );
+
+layout_page_begin( 'info.php' );
+
+print_manage_menu( 'manage_plugin_page.php' );
+
 ?>
 <br>
 <?php include( AGILEMANTIS_PLUGIN_URI.'/pages/footer_menu.php' ); ?>
@@ -35,7 +40,7 @@ ini_set("display_errors",1);
 <div class="table-container">
 	<table align="center" class="width75" cellspacing="1">
 		<tr>
-			<td><a href="<?php echo plugin_page("availability.php")?>"><?php 
+			<td><a href="<?php echo plugin_page("availability.php")?>"><?php
 						echo plugin_lang_get( 'manage_availability_show_all' )?></a></td>
 			<td><a href="<?php echo plugin_page("availability.php")?>&filter=a">A</a></td>
 			<td><a href="<?php echo plugin_page("availability.php")?>&filter=b">B</a></td>
@@ -67,16 +72,16 @@ ini_set("display_errors",1);
 	</table>
 </div>
 <?php
-	
+
 	# save standard week availability
 	if( $_POST['action'] == "save" ) {
-		
+
 		foreach( $_POST['mo'] as $num => $row ) {
 			if( $agilemantis_av->getUserMarking( $num ) ) {
 				$hinweis = plugin_lang_get( 'manage_availability_error_108302' );
 				$mark_user[$num] = 1;
-			} 
-			
+			}
+
 			$_POST['mo'][$num] = str_replace( ',', '.', $_POST['mo'][$num] );
 			$_POST['tu'][$num] = str_replace( ',', '.', $_POST['tu'][$num] );
 			$_POST['we'][$num] = str_replace( ',', '.', $_POST['we'][$num] );
@@ -84,7 +89,7 @@ ini_set("display_errors",1);
 			$_POST['fr'][$num] = str_replace( ',', '.', $_POST['fr'][$num] );
 			$_POST['sa'][$num] = str_replace( ',', '.', $_POST['sa'][$num] );
 			$_POST['su'][$num] = str_replace( ',', '.', $_POST['su'][$num] );
-			
+
 			if( !is_numeric( $_POST['mo'][$num] ) || !is_numeric( $_POST['tu'][$num] ) ||
 				 !is_numeric( $_POST['we'][$num] ) || !is_numeric( $_POST['th'][$num] ) ||
 				 !is_numeric( $_POST['fr'][$num] ) || !is_numeric( $_POST['sa'][$num] ) ||
@@ -92,7 +97,7 @@ ini_set("display_errors",1);
 				$system = plugin_lang_get( 'manage_availability_error_985300' );
 				$mark_user[$num] = 1;
 			}
-			
+
 			if( $_POST['mo'][$num] > 24.00 || $_POST['tu'][$num] > 24.00 ||
 				 $_POST['we'][$num] > 24.00 || $_POST['fr'][$num] > 24.00 ||
 				 $_POST['th'][$num] > 24.00 || $_POST['th'][$num] > 24.00 ||
@@ -100,14 +105,14 @@ ini_set("display_errors",1);
 				$system = plugin_lang_get( 'manage_availability_error_984302' );
 				$mark_user[$num] = 1;
 			}
-			
+
 			if( $_POST['mo'][$num] < 0 || $_POST['tu'][$num] < 0 || $_POST['we'][$num] < 0 ||
 				 $_POST['fr'][$num] < 0 || $_POST['th'][$num] < 0 || $_POST['th'][$num] < 0 ||
 				 $_POST['sa'][$num] < 0 || $_POST['su'][$num] < 0 ) {
 				$system = plugin_lang_get( 'manage_availability_error_984303' );
 				$mark_user[$num] = 1;
 			}
-			
+
 			if( $system == "" ) {
 				$agilemantis_av->user_id = $num;
 				$agilemantis_av->monday = $_POST['mo'][$num];
@@ -124,7 +129,7 @@ ini_set("display_errors",1);
 			}
 		}
 	}
-	
+
 	$userData = $agilemantis_au->getAgileUser( true );
 	if( !empty( $userData ) ) {
 		foreach( $userData as $num => $row ) {
@@ -245,7 +250,7 @@ ini_set("display_errors",1);
 if( $_POST['back_button'] ) {
 	header( $agilemantis_sprint->forwardReturnToPage( 'availability.php' ) );
 } else {
-	
+
 	# save / update values from manage availbility for only one user
 	if( $_POST['action'] == "saveCal" && $_POST['submit'] ) {
 		$today_date = date( 'Y-m-d' );
@@ -312,7 +317,7 @@ if( $_POST['standard_availability'] != "" ) {
 }
 
 if( $_POST['kalender'] || $_POST['standard_availability'] != "" || $_POST['staycal'] == 1 ) {
-	
+
 	$days[0] = plugin_lang_get( 'mo' );
 	$days[1] = plugin_lang_get( 'tu' );
 	$days[2] = plugin_lang_get( 'we' );
@@ -391,35 +396,35 @@ if( $_POST['kalender'] || $_POST['standard_availability'] != "" || $_POST['stayc
 				value="Add Standard-Availability">
 			<tr>
 				<td class="left" colspan="2"><b><?php echo plugin_lang_get( 'manage_availability_planning_for' )?></b>
-					<span style="font-weight: bold; color: grey;"><?php 
+					<span style="font-weight: bold; color: grey;"><?php
 						echo $agilemantis_cal->getUserName($num)?></span></td>
 			</tr>
 			<tr>
 				<td>
 					<div class="calendar height400">
-						<?php 
+						<?php
 						$count = $agilemantis_cal->getCalender($start,$end,$num,$days);
 						?>
 					</div>
 					<center>
 						<input type="submit"
-							name="standard_availability[<?php 
+							name="standard_availability[<?php
 								echo $num?>][<?php echo $monat_count?>][<?php echo date('Y',$start)?>]"
 							value="<?php echo plugin_lang_get( 'manage_availability_save_standard' )?>">
 					</center>
 					<?php if($count > 0){
 							$error = '<br><br><span class="message_error">'.
 								plugin_lang_get( 'manage_availability_error_108301' ).'</span>';
-						  } else { 
+						  } else {
 							$error = '<br><br>&nbsp;';
 						  }?>
 					<center><?php echo $error;?></center>
 				</td>
 			</tr>
 		</table>
-	</div> 
+	</div>
 			<?php
-				if( $monat_count >= 12 ) { 
+				if( $monat_count >= 12 ) {
 					$monat_count = 0;
 				}
 				$monat_count++;
@@ -435,4 +440,5 @@ if( $_POST['kalender'] || $_POST['standard_availability'] != "" || $_POST['stayc
 	<br>
 </form>
 <?php }?>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();

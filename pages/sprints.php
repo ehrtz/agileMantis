@@ -1,7 +1,7 @@
-<?php 
+<?php
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -9,7 +9,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -25,14 +25,19 @@
 # along with agileMantis. If not, see <http://www.gnu.org/licenses/>.
 
 
-html_page_top( plugin_lang_get( 'manage_sprints_title' ) );
+layout_page_header( plugin_lang_get( 'manage_sprints_title' ) );
+
+layout_page_begin( 'info.php' );
+
+print_manage_menu( 'manage_plugin_page.php' );
+
 $t_user_right = $agilemantis_au->authUser();
 if( $t_user_right == 2 || $t_user_right == 3 || current_user_is_administrator() ) {
 	?>
 <br>
 <?php
 	include (AGILEMANTIS_PLUGIN_URI . '/pages/footer_menu.php');
-	
+
 	# delete selected sprint by id
 	if( $_POST['deleteSprint'] != "" ) {
 		$agilemantis_sprint->id = ( int ) $_POST['sprint_id'];
@@ -56,9 +61,9 @@ if( $t_user_right == 2 || $t_user_right == 3 || current_user_is_administrator() 
 				<input type="hidden" name="disable_click" value="1">
 			<?php } ?>
 			<input type="checkbox" name="show_all_sprints"
-						<?php 
-							if( $_POST['show_all_sprints'] == '1' 
-								|| ( $_GET['klickStatus'] == 1 
+						<?php
+							if( $_POST['show_all_sprints'] == '1'
+								|| ( $_GET['klickStatus'] == 1
 								&& $_POST['disable_click'] != 1 ) ) {
 							$klick=1;
 						?>
@@ -111,45 +116,45 @@ if( $t_user_right == 2 || $t_user_right == 3 || current_user_is_administrator() 
 				$status = plugin_lang_get( 'status_closed' );
 				break;
 		}
-		
+
 		# format sprint start and end date
 		$convertedDateStart = substr($row['start'], 0, 10);
 		$convertedDateEnd = substr($row['end'], 0, 10);
 		$temp_start_date = explode('-',$convertedDateStart);
-		$temp_end_date = explode('-',$convertedDateEnd);		
+		$temp_end_date = explode('-',$convertedDateEnd);
 		$row['start'] = mktime( 0, 0, 0, $temp_start_date[1], $temp_start_date[2], $temp_start_date[0] );
 		$row['end'] = mktime( 0, 0, 0, $temp_end_date[1], $temp_end_date[2], $temp_end_date[0] );
-		
+
 		$end_date = $row['end'];
 		if( time() >= $row['start'] ) {
 			$start_date = time();
 		} else {
 			$start_date = $row['start'];
 		}
-		
+
 		if( $row['status'] == 0 ) {
 			$start_date = $row['start'];
 		}
 		$diff = $end_date - $start_date;
 		$anzahl_tage = ceil( $diff / 86400 );
-		
+
 		if( $anzahl_tage == 0 && $end_date > time() ) {
 			$anzahl_tage = 1;
 		} elseif( $anzahl_tage <= 0 ) {
 			$anzahl_tage = 0;
 		}
-		
+
 		if( stristr( $anzahl_tage, "-" ) ) {
 			$anzahl_tage = str_replace( "-", "", $anzahl_tage );
 		}
-		
-		if( ($row['status'] == 0 
+
+		if( ($row['status'] == 0
 			&& $agilemantis_sprint->sprintHasUserStories( $row['sname'] ) == false) ) {
 			$do_not_delete = true;
 		} else {
 			$do_not_delete = false;
 		}
-		
+
 		$agilemantis_sprint->sprint_id = $row['sid'];
 		?>
 	<tr>
@@ -209,4 +214,5 @@ if( $t_user_right == 2 || $t_user_right == 3 || current_user_is_administrator() 
 <?php
 	}
 ?>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();

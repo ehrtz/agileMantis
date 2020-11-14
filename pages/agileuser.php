@@ -25,7 +25,11 @@
 # along with agileMantis. If not, see <http://www.gnu.org/licenses/>.
 
 
-	html_page_top(plugin_lang_get( 'manage_user_title' ));
+layout_page_header( plugin_lang_get( 'manage_user_title' ) );
+
+layout_page_begin( 'info.php' );
+
+print_manage_menu( 'manage_plugin_page.php' );
 
 	# check if user has enough rights
 	$t_user_right = $agilemantis_au->authUser();
@@ -291,4 +295,5 @@
 <?php
 	}
 ?>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();

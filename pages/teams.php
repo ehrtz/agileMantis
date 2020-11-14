@@ -1,7 +1,7 @@
 <?php
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -9,7 +9,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -25,8 +25,12 @@
 # along with agileMantis. If not, see <http://www.gnu.org/licenses/>.
 
 
-	
-	html_page_top(plugin_lang_get( 'manage_teams_title' )); 
+
+layout_page_header( plugin_lang_get( 'manage_teams_title' ) );
+
+layout_page_begin( 'info.php' );
+
+print_manage_menu( 'manage_plugin_page.php' );
 ?>
 <br>
 <?php include(AGILEMANTIS_PLUGIN_URI.'/pages/footer_menu.php');?>
@@ -71,9 +75,9 @@ $teams = $agilemantis_team->getTeams();
 					Master</a></td>
 			<td class="category"><?php echo plugin_lang_get( 'common_actions' )?></td>
 		</tr>
-	<?php 
-		if( !empty( $teams ) ) { 
-			foreach( $teams AS $num => $row ) { 
+	<?php
+		if( !empty( $teams ) ) {
+			foreach( $teams AS $num => $row ) {
 	?>
 	<tr <?php echo helper_alternate_class() ?>>
 			<td><?php echo string_display_line_links( $row['name'] )?></td>
@@ -103,4 +107,5 @@ $teams = $agilemantis_team->getTeams();
 	<?php }}?>
 </table>
 </div>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();

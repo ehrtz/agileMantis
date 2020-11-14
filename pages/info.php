@@ -1,7 +1,7 @@
 <?php
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -9,7 +9,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -25,8 +25,12 @@
 # along with agileMantis. If not, see <http://www.gnu.org/licenses/>.
 
 
-	html_page_top(plugin_lang_get( 'info_title' ));
-	
+layout_page_header( plugin_lang_get( 'info_title' ) );
+
+layout_page_begin( 'info.php' );
+
+print_manage_menu( 'manage_plugin_page.php' );
+
 	if(!config_is_set('plugin_agileMantis_gadiv_agilemantis_version')){
 		config_set('plugin_agileMantis_gadiv_agilemantis_version', 0);
 	}
@@ -74,4 +78,5 @@ if(plugin_is_loaded('agileMantisExpert')){
 <?php } else {
 		echo '<br><center><span class="message_error">'.
 		plugin_lang_get( 'info_error_921000' ).'</span></center>';}?>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();

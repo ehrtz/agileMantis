@@ -1,7 +1,7 @@
 <?php
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -9,7 +9,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -30,7 +30,7 @@ if( $_POST['submit'] == plugin_lang_get( 'button_back' ) ) {
 	header( $agilemantis_au->forwardReturnToPage( 'agileuser.php' ) );
 }
 if( $_POST['action'] == 'addUser' ) {
-	
+
 	$f_username = gpc_get_string( 'username' );
 	$f_realname = gpc_get_string( 'realname', '' );
 	$f_password = gpc_get_string( 'password', '' );
@@ -38,7 +38,7 @@ if( $_POST['action'] == 'addUser' ) {
 	$f_email = gpc_get_string( 'email', '' );
 	$f_protected = false;
 	$f_enabled = true;
-	
+
 	if( $_POST['administrator'] == 1 ) {
 		$f_access_level = 70;
 	} elseif( $_POST['developer'] == 1 ) {
@@ -46,13 +46,13 @@ if( $_POST['action'] == 'addUser' ) {
 	} else {
 		$f_access_level = 25;
 	}
-	
+
 	# check for empty username
 	$f_username = trim( $f_username );
 	if( is_blank( $f_username ) ) {
 		trigger_error( ERROR_EMPTY_FIELD, ERROR );
 	}
-	
+
 	# Check the name for validity here so we do it before promting to use a
 	#  blank password (don't want to prompt the user if the process will fail
 	#  anyway)
@@ -61,37 +61,41 @@ if( $_POST['action'] == 'addUser' ) {
 	user_ensure_name_valid( $f_username );
 	user_ensure_realname_valid( $t_realname );
 	user_ensure_realname_unique( $f_username, $f_realname );
-	
+
 	if( $f_password != $f_password_verify ) {
 		trigger_error( ERROR_USER_CREATE_PASSWORD_MISMATCH, ERROR );
 	}
-	
+
 	$f_email = email_append_domain( $f_email );
 	email_ensure_not_disposable( $f_email );
-	
+
 	if( is_blank( $f_password ) ) {
-		helper_ensure_confirmed( lang_get( 'empty_password_sure_msg' ), 
+		helper_ensure_confirmed( lang_get( 'empty_password_sure_msg' ),
 								lang_get( 'empty_password_button' ) );
 	}
-	
+
 	lang_push( config_get( 'default_language' ) );
-	
+
 	$t_admin_name = user_get_name( auth_get_current_user_id() );
-	$t_cookie = user_create( $f_username, $f_password, $f_email, 
+	$t_cookie = user_create( $f_username, $f_password, $f_email,
 				$f_access_level, $f_protected, $f_enabled, $t_realname, $t_admin_name );
-	
+
 	# set language back to user language
 	lang_pop();
-	
+
 	$t_user_id = user_get_id_by_name( $f_username );
-	
+
 	user_set_password( $t_user_id, $f_password, false );
-	$agilemantis_au->setAgileMantisUserRights( 
+	$agilemantis_au->setAgileMantisUserRights(
 				$t_user_id, $_POST['participant'], $_POST['developer'], $_POST['administrator'] );
-	
+
 	header( $agilemantis_au->forwardReturnToPage( 'agileuser.php' ) );
 } else {
-	html_page_top( plugin_lang_get( 'manage_user_add_new_user' ) );
+	layout_page_header( plugin_lang_get( 'manage_user_add_new_user' ) );
+
+	layout_page_begin( 'info.php' );
+
+	print_manage_menu( 'manage_plugin_page.php' );
 }
 ?>
 
@@ -113,7 +117,7 @@ if( $_POST['action'] == 'addUser' ) {
 		<?php echo lang_get( 'username' ) ?>
 	</td>
 					<td width="75%"><input type="text" name="username" size="32"
-						maxlength="<?php echo USERLEN;?>" /></td>
+						maxlength="<?php echo DB_FIELD_SIZE_USERNAME;?>" /></td>
 				</tr>
 <?php
 	if ( !$t_ldap || config_get( 'use_ldap_realname' ) == OFF ) {
@@ -123,7 +127,7 @@ if( $_POST['action'] == 'addUser' ) {
 		<?php echo lang_get( 'realname' ) ?>
 	</td>
 					<td><input type="text" name="realname" size="32"
-						maxlength="<?php echo REALLEN;?>" /></td>
+						maxlength="<?php echo DB_FIELD_SIZE_REALNAME;?>" /></td>
 				</tr>
 <?php
 	}
@@ -146,14 +150,14 @@ if( $_POST['action'] == 'addUser' ) {
 		<?php echo lang_get( 'password' ) ?>
 	</td>
 					<td><input type="password" name="password" size="32"
-						maxlength="<?php echo PASSLEN;?>" /></td>
+						maxlength="<?php echo auth_get_password_max_size();?>" /></td>
 				</tr>
 				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
 		<?php echo lang_get( 'verify_password' ) ?>
 	</td>
 					<td><input type="password" name="password_verify" size="32"
-						maxlength="<?php echo PASSLEN;?>" /></td>
+						maxlength="<?php echo auth_get_password_max_size();?>" /></td>
 				</tr>
 				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
@@ -187,4 +191,5 @@ if( $_POST['action'] == 'addUser' ) {
 	echo '<br><center><span class="message_error">'.
 			plugin_lang_get( 'info_error_921001' ).'</span></center>';
 	}?>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();

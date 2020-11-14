@@ -2,7 +2,7 @@
 
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -10,7 +10,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -26,7 +26,11 @@
 # along with agileMantis. If not, see <http://www.gnu.org/licenses/>.
 
 
-	html_page_top(plugin_lang_get( 'manage_capacity_title' ));
+layout_page_header( plugin_lang_get( 'manage_capacity_title' ) );
+
+layout_page_begin( 'info.php' );
+
+print_manage_menu( 'manage_plugin_page.php' );
 ?>
 <br>
 <?php
@@ -75,57 +79,57 @@ if( $_POST['back_button'] ) {
 			}
 		}
 	}
-	
+
 	if( $_POST['action'] == 'save' && $system == "" && !$_POST['addavailability'] &&
 		 !$_POST['sprint'] && !$_POST['submit_button'] ) {
 		header( $agilemantis_sprint->forwardReturnToPage( 'capacity.php' ) );
 	}
-	
+
 	$showform = true;
 	if( $_POST['submit_button'] ) {
 		# check if start date is set
 		if( $_POST['start'] == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_923402' );
 		}
-		
+
 		if( stristr( $_POST['start'], ',' ) && $system == "" ) {
 			$_POST['start'] = str_replace( ',', '.', $_POST['start'] );
 		}
-		
+
 		if( stristr( $_POST['start'], '.' ) && $system == "" ) {
 			$_POST['start'] = str_replace( '.', '', $_POST['start'] );
 		}
-		
+
 		# check if reformatted date is numeric
 		if( !is_numeric( $_POST['start'] ) && $system == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_985403' );
 		}
-		
+
 		# check if start date is between 6 and 10 digits long
 		if( (strlen( $_POST['start'] ) < 6 || strlen( $_POST['start'] ) > 10) &&
 			 $system == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_985402' );
 		}
-		
+
 		# check if start date is a valid date
 		if( $system == "" ) {
-			
+
 			$day = substr( $_POST['start'], 0, 2 );
 			$month = substr( $_POST['start'], 2, 2 );
 			$year_start = substr( $_POST['start'], 4, strlen( $_POST['start'] ) );
-			
+
 			if( $day > 31 ) {
 				$day = "";
 			}
-			
+
 			if( $month > 12 ) {
 				$month = "";
 			}
-			
+
 			if( strlen( $year_start ) < 4 ) {
 				$year_start = '20' . $year_start;
 			}
-			
+
 			if( !empty( $day ) && !empty( $month ) && !empty( $year_start ) ) {
 				$_POST['start'] = $day . '.' . $month . '.' . $year_start;
 			} else {
@@ -135,7 +139,7 @@ if( $_POST['back_button'] ) {
 		} else {
 			$_POST['start'] = "";
 		}
-		
+
 		if( $year_start >= 2038 && $system == "" ) {
 			$_POST['start'] = "";
 			$system = plugin_lang_get( 'manage_capacity_error_180401' );
@@ -144,42 +148,42 @@ if( $_POST['back_button'] ) {
 		if( $_POST['end'] == "" && $system == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_923400' );
 		}
-		
+
 		if( stristr( $_POST['end'], ',' ) && $system == "" ) {
 			$_POST['end'] = str_replace( ',', '.', $_POST['end'] );
 		}
-		
+
 		if( stristr( $_POST['end'], '.' ) && $system == "" ) {
 			$_POST['end'] = str_replace( '.', '', $_POST['end'] );
 		}
-		
+
 		if( !is_numeric( $_POST['end'] ) && $system == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_985401' );
 		}
-		
+
 		# check if end date is between 6 and 10 digits long
 		if( (strlen( $_POST['end'] ) < 6 || strlen( $_POST['end'] ) > 10) && $system == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_985400' );
 		}
-		
+
 		if( $system == "" ) {
-			
+
 			$day = substr( $_POST['end'], 0, 2 );
 			$month = substr( $_POST['end'], 2, 2 );
 			$year_end = substr( $_POST['end'], 4, strlen( $_POST['end'] ) );
-			
+
 			if( $day > 31 ) {
 				$day = "";
 			}
-			
+
 			if( $month > 12 ) {
 				$month = "";
 			}
-			
+
 			if( strlen( $year_end ) < 4 ) {
 				$year_end = '20' . $year_end;
 			}
-			
+
 			if( !empty( $day ) && !empty( $month ) && !empty( $year_end ) ) {
 				$_POST['end'] = $day . '.' . $month . '.' . $year_end;
 			} else {
@@ -189,26 +193,26 @@ if( $_POST['back_button'] ) {
 		} else {
 			$_POST['end'] = "";
 		}
-		
+
 		if( $year_end >= 2038 && $system == "" ) {
 			$_POST['end'] = "";
 			$system = plugin_lang_get( 'manage_capacity_error_180400' );
 		}
-		
+
 		# check if team is set
 		if( $_POST['team'] == 0 && $system == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_923401' );
 		}
-		
+
 		if( strtotime( $_POST['end'] ) < strtotime( $_POST['start'] ) && $system == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_180402' );
 		}
-		
+
 		if( date( 'Y', strtotime( $_POST['end'] ) ) < date( 'Y', time() ) - 2 &&
 			 date( 'Y', strtotime( $_POST['start'] ) ) < date( 'Y', time() ) - 2 && $system == "" ) {
 			$system = plugin_lang_get( 'manage_capacity_error_980400' );
 		}
-		
+
 		if( $system == "" ) {
 			$showform = false;
 		}
@@ -231,7 +235,7 @@ if( $_POST['back_button'] ) {
 <?php if($showform && !$_POST['addavailability'] && !$_POST['staycal'] == 1){?>
 <?php
 	$show_post_values = 1;
-	
+
 	# change sprint start and end date
 	if($_POST['sprint'] != ""){
 		$agilemantis_sprint->sprint_id 	= 	htmlspecialchars($_POST['sprint']);
@@ -304,25 +308,25 @@ if( $_POST['back_button'] ) {
 			<tr <?php echo helper_alternate_class() ?>>
 				<td class="category"><b>*Start</b></td>
 				<td><input type="text" name="start"
-					value="<?php 
-					if( $_POST['sprint'] != "" ) { 
+					value="<?php
+					if( $_POST['sprint'] != "" ) {
 						echo $sprint_start_date[2].'.'. $sprint_start_date[1].'.'.
 							 $sprint_start_date[0];
 					} else {
-						if( $_POST['start'] ) { ?><?php echo $_POST['start']?><?php 
+						if( $_POST['start'] ) { ?><?php echo $_POST['start']?><?php
 						} else {
-						?><?php echo date("d.m.Y",time())?><?php 
+						?><?php echo date("d.m.Y",time())?><?php
 						}
 					}?>"></td>
 			</tr>
 			<tr <?php echo helper_alternate_class() ?>>
-				<td class="category"><b>*<?php 
+				<td class="category"><b>*<?php
 							echo plugin_lang_get( 'manage_capacity_end' )?></b></td>
 				<td><input type="text" name="end"
-					value="<?php 
+					value="<?php
 					if( $_POST['sprint'] != "" ) {
 						echo $sprint_end_date[2].'.'.$sprint_end_date[1].'.'.$sprint_end_date[0];
-					} else { 
+					} else {
 						echo $_POST['end'];
 					}?>"></td>
 			</tr>
@@ -340,14 +344,14 @@ if( $_POST['back_button'] ) {
 					foreach( $teamData AS $num => $row ) {
 				?>
 					<option value="<?php echo $row['id']?>"
-				<?php 
-				if( $_POST['sprint'] != "" ) { 
+				<?php
+				if( $_POST['sprint'] != "" ) {
 					if( $selectedSprint['team_id'] == $row['id'] ) { ?>
-							selected <?php 
+							selected <?php
 					}
 				} else {
-					if( $_POST['team'] == $row['id'] ) {?> selected <?php 
-					}?> <?php 
+					if( $_POST['team'] == $row['id'] ) {?> selected <?php
+					}?> <?php
 				}?>><?php echo $row['name']?></option>
 				<?php }?>
 			</select>
@@ -365,30 +369,30 @@ if( $_POST['back_button'] ) {
 </form>
 <?php }?>
 <?php
-if( ( $_POST['team'] != 0 && $_POST['start'] != "" && $_POST['end'] != "" 
-	&& strtotime( $_POST['end'] ) >= strtotime( $_POST['start'] ) && $showform == false ) 
+if( ( $_POST['team'] != 0 && $_POST['start'] != "" && $_POST['end'] != ""
+	&& strtotime( $_POST['end'] ) >= strtotime( $_POST['start'] ) && $showform == false )
 	|| $_POST['addavailability'] || $_POST['staycal'] == 1 ) {
 $system = "";
 ?>
 <form action="" method="post">
-	<input type="hidden" name="action" value="save"> 
-	<input type="hidden" name="start" value="<?php echo $_POST['start']?>"> 
-	<input type="hidden" name="end" value="<?php echo $_POST['end']?>"> 
+	<input type="hidden" name="action" value="save">
+	<input type="hidden" name="start" value="<?php echo $_POST['start']?>">
+	<input type="hidden" name="end" value="<?php echo $_POST['end']?>">
 	<input type="hidden" name="team" value="<?php echo $_POST['team']?>">
-	<input type="hidden" name="fromSprintBacklog" value="<?php echo $_POST['fromSprintBacklog']?>"> 
-	<input type="hidden" name="fromTaskboard" value="<?php echo $_POST['fromTaskboard']?>"> 
-	<input type="hidden" name="productBacklogName" value="<?php echo $_POST['productBacklogName']?>"> 
-	<input type="hidden" name="fromProductBacklog" value="<?php echo $_POST['fromProductBacklog']?>"> 
-	<input type="hidden" name="fromDailyScrum" value="<?php echo $_POST['fromDailyScrum']?>"> 
-	<input type="hidden" name="fromStatistics" value="<?php echo $_POST['fromStatistics']?>"> 
+	<input type="hidden" name="fromSprintBacklog" value="<?php echo $_POST['fromSprintBacklog']?>">
+	<input type="hidden" name="fromTaskboard" value="<?php echo $_POST['fromTaskboard']?>">
+	<input type="hidden" name="productBacklogName" value="<?php echo $_POST['productBacklogName']?>">
+	<input type="hidden" name="fromProductBacklog" value="<?php echo $_POST['fromProductBacklog']?>">
+	<input type="hidden" name="fromDailyScrum" value="<?php echo $_POST['fromDailyScrum']?>">
+	<input type="hidden" name="fromStatistics" value="<?php echo $_POST['fromStatistics']?>">
 	<input type="hidden" name="sprintName" value="<?php echo $_POST['sprintName']?>">
 	<div class="table-container">
 		<table align="center" class="width100" cellspacing="1">
 			<tr>
 				<td class="left" style="font-weight: bold">
-					<?php echo plugin_lang_get( 'manage_capacity_planning_for' )?> 
+					<?php echo plugin_lang_get( 'manage_capacity_planning_for' )?>
 					<span
-						style="color: grey;"><?php 
+						style="color: grey;"><?php
 						$agilemantis_team->id = $_POST['team'];
 						$currentTeam = $agilemantis_team->getSelectedTeam();
 						echo string_display($currentTeam[0]['name']);
@@ -399,7 +403,7 @@ $system = "";
 					<input type="submit" name="addavailability"
 					value="<?php echo plugin_lang_get( 'manage_capacity_add_availability' )?>">
 					<input type="submit" name="submit"
-					value="<?php echo plugin_lang_get( 'button_save' )?>"> 
+					value="<?php echo plugin_lang_get( 'button_save' )?>">
 					<input type="submit" name="back_button"
 					value="<?php echo plugin_lang_get( 'button_back' )?>">
 				</td>
@@ -408,7 +412,7 @@ $system = "";
 	</div>
 	<div style="clear: both;"></div>
 	<?php
-		
+
 		# configure days of a week
 		$days_of_week[0] 	= 	plugin_lang_get( 'mo' );
 		$days_of_week[1] 	= 	plugin_lang_get( 'tu' );
@@ -429,16 +433,16 @@ $system = "";
 
 		$month_start		=	date('n',$start);
 		$month_end			=	date('n',$end);
-		
+
 		$datetime1 = new DateTime($_POST['start']);
 		$datetime2 = new DateTime($_POST['end']);
 		$interval = $datetime1->diff($datetime2);
-		
+
 		$amount_of_weeks = ceil($interval->format('%a') / 7);
-		
-		$amount_of_month = abs( ( $year_start * 12 + $month_start ) 
+
+		$amount_of_month = abs( ( $year_start * 12 + $month_start )
 								- ( $year_end * 12 + $month_end ) );
-		
+
 		$agilemantis_team->id 		=	$_POST['team'];
 		$teamDeveloper 	= 	$agilemantis_team->getTeamDeveloper($_POST['team']);
 		# open calendary foreach developer in chosen team
@@ -458,4 +462,5 @@ $system = "";
 	<br>
 </form>
 <?php }?>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();

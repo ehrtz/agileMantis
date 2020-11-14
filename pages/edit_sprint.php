@@ -1,7 +1,7 @@
 <?php
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -9,7 +9,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -25,7 +25,12 @@
 # along with agileMantis. If not, see <http://www.gnu.org/licenses/>.
 
 
-	html_page_top(plugin_lang_get( 'edit_sprint_title' )); 
+layout_page_header( plugin_lang_get( 'edit_sprint_title' ) );
+
+layout_page_begin( 'info.php' );
+
+print_manage_menu( 'manage_plugin_page.php' );
+
 ?>
 <br>
 <?php include(AGILEMANTIS_PLUGIN_URI.'/pages/footer_menu.php');?>
@@ -41,7 +46,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 # set current date
 $current_date = mktime( 0, 0, 0, date( 'm' ), date( 'd' ), date( 'Y' ) );
 
-# collecting sprint information 
+# collecting sprint information
 $agilemantis_sprint->pb_id = ( int ) $_POST['product_backlog_id'];
 $agilemantis_sprint->sprint_id = $_POST['id'];
 $agilemantis_sprint->name = $_POST['name'];
@@ -58,69 +63,69 @@ if( $_POST['change_description'] && $_POST['status'] == 2 ) {
 }
 
 if( $_POST['action'] == 'edit' && $_POST['save_sprint'] ) {
-	# check sprint name 
+	# check sprint name
 	if( empty( $agilemantis_sprint->name ) ) {
 		$system = plugin_lang_get( 'edit_sprints_error_922500' );
 	}
-	
+
 	# check if sprint name is unique
 	if( !$agilemantis_sprint->sprintnameisunique() && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_982500' );
 	}
-	
-	# check start date 
+
+	# check start date
 	if( empty( $agilemantis_sprint->start ) && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_923501' );
 	}
-	
+
 	# check if reformatted date is numeric
 	if( !is_numeric( str_replace( '.', '', $agilemantis_sprint->start ) ) && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_985502' );
 	}
-	
+
 	# check if start date is between 6 and 10 digits long
-	if( (strlen( $agilemantis_sprint->start ) < 6 
+	if( (strlen( $agilemantis_sprint->start ) < 6
 			|| strlen( $agilemantis_sprint->start ) > 10) && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_985503' );
 	}
-	
+
 	# make date checks
 	if( $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_985500' );
 		$format = 'dd.mm.yyyy';
-		
+
 		$separator_only = str_replace( array( 'm','d','y' ), '', $format );
 		$separator = $separator_only[0];
-		
+
 		if( $separator && strlen( $separator_only ) == 2 ) {
-			
+
 			$regexp = str_replace( 'mm', '(0?[1-9]|1[0-2])', $format );
 			$regexp = str_replace( 'dd', '(0?[1-9]|[1-2][0-9]|3[0-1])', $regexp );
 			$regexp = str_replace( 'yyyy', '(19|20)?[0-9][0-9]', $regexp );
 			$regexp = str_replace( $separator, "\\" . $separator, $regexp );
-			
+
 			if( $regexp != $agilemantis_sprint->start && preg_match( '/' . $regexp . '\z/', $agilemantis_sprint->start ) ) {
-				
+
 				$date = explode( $separator, $agilemantis_sprint->start );
 				$day = $date[0];
 				$month = $date[1];
 				$year = $date[2];
-				
+
 				if( strlen( $year ) == 2 ) {
 					$year = '20' . $year;
 					$agilemantis_sprint->start = $day . '.' . $month . '.' . $year;
 				}
-				
+
 				if( @checkdate( $month, $day, $year ) ) {
 					$system = "";
 				}
 			}
 		}
 	}
-	
+
 	$t_start = strtotime( $agilemantis_sprint->start );
 	$t_old_start = strtotime( $_POST['old_start_date'] );
-	
+
 	if( $agilemantis_sprint->sprint_id > 0 && $system == "" ) {
 		if( $t_start != $t_old_start && $t_start < $current_date && $system == "" ) {
 			$system = plugin_lang_get( 'edit_sprints_error_980503' );
@@ -132,60 +137,60 @@ if( $_POST['action'] == 'edit' && $_POST['save_sprint'] ) {
 			unset( $_POST['start_date'] );
 		}
 	}
-	
-	# check end date 
+
+	# check end date
 	if( empty( $agilemantis_sprint->end ) && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_923500' );
 	}
-	
+
 	# check if reformatted date is numeric
 	if( !is_numeric( str_replace( '.', '', $agilemantis_sprint->end ) ) && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_985504' );
 	}
-	
+
 	# check if start date is between 6 and 10 digits long
-	if( (strlen( $agilemantis_sprint->end ) < 6 
+	if( (strlen( $agilemantis_sprint->end ) < 6
 		|| strlen( $agilemantis_sprint->end ) > 10) && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_985505' );
 	}
-	
+
 	if( $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_985501' );
 		$format = 'dd.mm.yyyy';
-		
+
 		$separator_only = str_replace( array( 'm','d','y' ), '', $format );
 		$separator = $separator_only[0];
-		
+
 		if( $separator && strlen( $separator_only ) == 2 ) {
-			
+
 			$regexp = str_replace( 'mm', '(0?[1-9]|1[0-2])', $format );
 			$regexp = str_replace( 'dd', '(0?[1-9]|[1-2][0-9]|3[0-1])', $regexp );
 			$regexp = str_replace( 'yyyy', '(19|20)?[0-9][0-9]', $regexp );
 			$regexp = str_replace( $separator, "\\" . $separator, $regexp );
-			
-			if( $regexp != $agilemantis_sprint->end 
+
+			if( $regexp != $agilemantis_sprint->end
 				&& preg_match( '/' . $regexp . '\z/', $agilemantis_sprint->end ) ) {
-				
+
 				$date = explode( $separator, $agilemantis_sprint->end );
 				$day = $date[0];
 				$month = $date[1];
 				$year = $date[2];
-				
+
 				if( strlen( $year ) == 2 ) {
 					$year = '20' . $year;
 					$agilemantis_sprint->end = $day . '.' . $month . '.' . $year;
 				}
-				
+
 				if( @checkdate( $month, $day, $year ) ) {
 					$system = "";
 				}
 			}
 		}
 	}
-	
+
 	$t_end = strtotime( $agilemantis_sprint->end );
 	$t_old_end = strtotime( $_POST['old_end_date'] );
-	
+
 	if( $agilemantis_sprint->sprint_id > 0 && $system == "" ) {
 		if( $t_end != $t_old_end && $t_end < $current_date && $system == "" ) {
 			$system = plugin_lang_get( 'edit_sprints_error_980501' );
@@ -197,37 +202,37 @@ if( $_POST['action'] == 'edit' && $_POST['save_sprint'] ) {
 			unset( $_POST['end_date'] );
 		}
 	}
-	
+
 	# check both dates
 	if( $t_start > $t_end && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_980502' );
 	}
-	
-	# check team 
+
+	# check team
 	if( $agilemantis_sprint->team_id == 0 && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_923502' );
 	}
-	
+
 	$agilemantis_sprint->start = date( 'Y-m-d', $t_start );
 	$agilemantis_sprint->end = date( 'Y-m-d', $t_end );
-	
+
 	# check if this sprints overlaps with another sprint of the team
 	if( $agilemantis_sprint->isSprintOverlapping() && $system == "" ) {
 		$system = plugin_lang_get( 'edit_sprints_error_980500' );
 	}
-	
+
 	if( $system == "" && $_POST['negative'] != 'no_save' ) {
 
 		$t_old_sprint = $agilemantis_sprint->getSprintByName();
 
 		$agilemantis_sprint->editSprint();
-		
+
 
 		if ( !empty($t_old_sprint) ) {
 			$agilemantis_sprint->updateSprintCustomFieldStrings(
 						$t_old_sprint['name'], $agilemantis_sprint->name );
-		}		
-		
+		}
+
 		header( $agilemantis_sprint->forwardReturnToPage( "sprints.php" ) );
 	}
 }
@@ -238,7 +243,7 @@ if( $_POST['action'] == 'edit' && $_POST['save_sprint'] ) {
 </center>
 <br>
 <?php }
-	
+
 	# get sprint id
 if( $_GET['sprint_id'] > 0 || $_POST['id'] > 0 ) {
 	if( $_GET['sprint_id'] ) {
@@ -253,7 +258,7 @@ if( $_POST['edit'] ) {
 
 if( $agilemantis_sprint->sprint_id > 0 ) {
 	$s = $agilemantis_sprint->getSprintByName();
-	
+
 	# mark input fields as read only or disabled when sprint is running / closed
 	if( $s['status'] == 1 || $s['status'] == 2 ) {
 		$disabled = 'style="background-color: #EBEBE4;" readonly';
@@ -309,10 +314,10 @@ if( !$s['end'] ) {
 				<td class="category" width="30%">*Name</td>
 				<td class="left" width="70%"><input type="text" size="105"
 					maxlength="128" name="name"
-					value="<?php 
-						if( $s['id'] ) { 
-							echo $s['name']; 
-						} else { 
+					value="<?php
+						if( $s['id'] ) {
+							echo $s['name'];
+						} else {
 							echo $_POST['name'];
 						}?>"
 					<?php echo $disabled?>></td>
@@ -321,27 +326,27 @@ if( !$s['end'] ) {
 				<td class="category">
 		<?php echo plugin_lang_get( 'edit_sprint_goals' )?>
 	</td>
-				<td class="left"><textarea cols="80" rows="10" name="description"><?php 
-						if( $s['id'] ) { 
+				<td class="left"><textarea cols="80" rows="10" name="description"><?php
+						if( $s['id'] ) {
 							echo $s['description'];
-						} else { 
+						} else {
 							echo $_POST['description'];
 						}
 				?></textarea></td>
 			</tr>
 			<tr <?php echo helper_alternate_class() ?>>
-				<td class="category">*<?php echo plugin_lang_get( 'edit_sprints_begin' )?> <?php 
+				<td class="category">*<?php echo plugin_lang_get( 'edit_sprints_begin' )?> <?php
 							echo plugin_lang_get( 'edit_sprints_date_format' )?>
         </td>
 				<td class="left"><input type="text" size="105" maxlength="128"
 					name="start_date"
-					value="<?php 
-						if( $s['id'] ) { 
-							echo date( 'd.m.Y', $s['start'] ); 
-						} elseif ( $_POST['start_date'] ) { 
+					value="<?php
+						if( $s['id'] ) {
+							echo date( 'd.m.Y', $s['start'] );
+						} elseif ( $_POST['start_date'] ) {
 							echo $_POST['start_date'];
-						} else { 
-							echo date('d.m.Y', time() ) ; 
+						} else {
+							echo date('d.m.Y', time() ) ;
 						}?>"
 					<?php echo $disabled?>>
 			<?php if( $s['id'] > 0 ) { ?>
@@ -352,19 +357,19 @@ if( !$s['end'] ) {
 			</tr>
 			<tr <?php echo helper_alternate_class() ?>>
 				<td class="category">
-            *<?php echo plugin_lang_get( 'edit_sprints_end' )?> <?php 
+            *<?php echo plugin_lang_get( 'edit_sprints_end' )?> <?php
             		echo plugin_lang_get( 'edit_sprints_date_format' )?>
         </td>
 				<td class="left"><input type="text" size="105" maxlength="128"
 					name="end_date"
-					value="<?php 
+					value="<?php
 						if( $s['id'] ) {
 							echo date( 'd.m.Y',$s['end'] );
 						} elseif( $_POST['end_date'] ) {
 							echo $_POST['end_date'];
 						} else {
-							echo date( 'd.m.Y', ( time() 
-								+ ( plugin_config_get( 'gadiv_sprint_length' ) -1 ) * 86400 ) ); 
+							echo date( 'd.m.Y', ( time()
+								+ ( plugin_config_get( 'gadiv_sprint_length' ) -1 ) * 86400 ) );
 						} ?>"
 					<?php if( $s['status'] == 2 ) {
 						?> <?php echo $disabled?>
@@ -404,27 +409,29 @@ if( !$s['end'] ) {
 			} else {
 				$team_id = $_POST['team_id'];
 			}
-			
+
 			$teamdata = $agilemantis_team->getCompleteTeams();
-			foreach( $teamdata as $num => $row ) {
-				$teamSelected = '';
-				if( $row['id'] == $team_id ) {
-					$teamSelected = 'selected';
-					$selectedProductBacklog = $row['product_backlog'];
-					$selectedTeam = $row['id'];
-					
-					$agilemantis_team->id = $selectedProductBacklog;
-					$productBacklog = $agilemantis_team->getSelectedProductBacklog();
-					$agilemantis_team->id = $selectedTeam;
-					$t = $agilemantis_team->getSelectedTeam();
+			if ( isset( $teamdata ) ) {
+				foreach( $teamdata as $num => $row ) {
+					$teamSelected = '';
+					if( $row['id'] == $team_id ) {
+						$teamSelected = 'selected';
+						$selectedProductBacklog = $row['product_backlog'];
+						$selectedTeam = $row['id'];
+
+						$agilemantis_team->id = $selectedProductBacklog;
+						$productBacklog = $agilemantis_team->getSelectedProductBacklog();
+						$agilemantis_team->id = $selectedTeam;
+						$t = $agilemantis_team->getSelectedTeam();
+					}
+
+					?><option value="<?php echo $row['id']?>"
+								<?php echo $teamSelected?>><?php echo $row['name']?></option><?php
 				}
-				
-				?><option value="<?php echo $row['id']?>"
-							<?php echo $teamSelected?>><?php echo $row['name']?></option><?php
 			}
 			?>
 		</select>
-			
+
 			</tr>
 	<?php if(plugin_config_get('gadiv_daily_scrum') == 1){?>
 	<tr <?php echo helper_alternate_class() ?>>
@@ -432,7 +439,7 @@ if( !$s['end'] ) {
 				<td class="left"><input type="checkbox" name="daily_scrum"
 					<?php if( plugin_config_get('gadiv_daily_scrum') == 0 || $s['status'] == 2 ) {?>
 					disabled <?php }?>
-					<?php if( $s['daily_scrum'] == 1 
+					<?php if( $s['daily_scrum'] == 1
 							|| ( $s['id'] == 0 && $t[0]['daily_scrum'] == 1 ) ) {?>
 					checked <?php }?> value="1"></td>
 			</tr>
@@ -475,4 +482,5 @@ if( !$s['end'] ) {
 	</div>
 </form>
 <div style="clear: both"></div>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();

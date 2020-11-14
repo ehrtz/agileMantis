@@ -1,7 +1,7 @@
 <?php
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -9,7 +9,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -25,12 +25,16 @@
 # along with agileMantis. If not, see <http://www.gnu.org/licenses/>.
 
 
-html_page_top( plugin_lang_get( 'edit_teams_title' ) );
+layout_page_header( plugin_lang_get( 'edit_teams_title' ) );
+
+layout_page_begin( 'info.php' );
+
+print_manage_menu( 'manage_plugin_page.php' );
 
 if( empty($_POST) || $_POST['back_button'] ) {
 	header( $agilemantis_sprint->forwardReturnToPage( "teams.php" ) );
 } else {
-	
+
 	$team_id = "";
 	if( isset( $_POST['id'] ) ) {
 		$team_id = $_POST['id'];
@@ -44,7 +48,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 		$user_id = $_POST['developer'];
 	}
 	if( $team_id != "" && $user_id != "" && $user_id!="0" ) {
-		
+
 		$projects = "";
 		if( !$agilemantis_team->is_admin_user( $user_id ) ) {
 			$result = $agilemantis_project
@@ -65,23 +69,23 @@ if( empty($_POST) || $_POST['back_button'] ) {
 			$system .= $msg;
 		}
 	}
-	
+
 	# try to change the product
-	if( $_POST['product_owner'] == 0 && isset( $_POST['product_owner'] ) 
+	if( $_POST['product_owner'] == 0 && isset( $_POST['product_owner'] )
 			&& $_POST['id'] > 0 && $agilemantis_team->hasSprints( $_POST['id'] ) > 0 ) {
-		
+
 		$_POST['product_owner'] = $_POST['old_product_owner'];
 		$system = plugin_lang_get( 'edit_teams_error_100200' );
 	}
-	
+
 	# delete product owner
 	if( $_POST['product_owner'] == 0 && isset( $_POST['product_owner'] ) && $system == "" ) {
-		
+
 		$user_id = ( int ) $_POST['product_owner'];
 		$team_id = $_POST['id'];
 		$agilemantis_team->deleteTeamRoleMember( $team_id, 1 );
 	}
-	
+
 	# change product owner
 	if( $_POST['product_owner'] > 0 ) {
 		$user_id = ( int ) $_POST['product_owner'];
@@ -91,22 +95,22 @@ if( empty($_POST) || $_POST['back_button'] ) {
 		$_SESSION['setscrum'] = 1;
 		$_SESSION['hasUser'] = 1;
 	}
-	
+
 	# try to change the scrum master
-	if( $_POST['scrum_master'] == 0 && isset( $_POST['scrum_master'] ) 
+	if( $_POST['scrum_master'] == 0 && isset( $_POST['scrum_master'] )
 			&& $_POST['id'] > 0 && $agilemantis_team->hasSprints( $_POST['id'] ) > 0 ) {
-		
+
 		$_POST['scrum_master'] = $_POST['old_scrum_master'];
 		$system = plugin_lang_get( 'edit_teams_error_100201' );
 	}
-	
+
 	# delete scrum master
 	if( $_POST['scrum_master'] == 0 && isset( $_POST['scrum_master'] ) && $system == "" ) {
 		$user_id = ( int ) $_POST['scrum_master'];
 		$team_id = $_POST['id'];
 		$agilemantis_team->deleteTeamRoleMember( $team_id, 2 );
 	}
-	
+
 	# change scrum master
 	if( $_POST['scrum_master'] > 0 ) {
 		$user_id = ( int ) $_POST['scrum_master'];
@@ -116,7 +120,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 		$_SESSION['setscrum'] = 1;
 		$_SESSION['hasUser'] = 1;
 	}
-	
+
 	# add developer
 	if( $_POST['developer'] > 0 ) {
 		$user_id = ( int ) $_POST['developer'];
@@ -124,7 +128,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 		$agilemantis_team->addTeamMember( $user_id, $team_id, 3 );
 		$_SESSION['hasUser'] = 1;
 	}
-	
+
 	# add customer
 	if( $_POST['customer'] > 0 ) {
 		$user_id = ( int ) $_POST['customer'];
@@ -132,15 +136,15 @@ if( empty($_POST) || $_POST['back_button'] ) {
 		$agilemantis_team->addTeamMember( $user_id, $team_id, 4 );
 		$_SESSION['hasUser'] = 1;
 	}
-	
-	# add user 
+
+	# add user
 	if( $_POST['user'] > 0 ) {
 		$user_id = ( int ) $_POST['user'];
 		$team_id = $_POST['id'];
 		$agilemantis_team->addTeamMember( $user_id, $team_id, 5 );
 		$_SESSION['hasUser'] = 1;
 	}
-	
+
 	# add manager
 	if( $_POST['manager'] > 0 ) {
 		$user_id = ( int ) $_POST['manager'];
@@ -148,14 +152,14 @@ if( empty($_POST) || $_POST['back_button'] ) {
 		$agilemantis_team->addTeamMember( $user_id, $team_id, 6 );
 		$_SESSION['hasUser'] = 1;
 	}
-	
+
 	# edit team information
 	if( $_POST['action'] == "edit" ) {
-		
+
 		$agilemantis_team->id = ( int ) $_POST['id'];
 		$agilemantis_team->name = $_POST['t_name'];
 		$agilemantis_team->daily_scrum = $_POST['daily_scrum'];
-		
+
 		if( empty( $agilemantis_team->name ) ) {
 			$system = plugin_lang_get( 'edit_teams_error_922200' );
 			if( $_POST['old_team_name'] != "" ) {
@@ -168,14 +172,14 @@ if( empty($_POST) || $_POST['back_button'] ) {
 				if( ( int ) $_POST['product_backlogs'] > 0 ) {
 					$agilemantis_team->description = $_POST['t_description'];
 					$agilemantis_team->product_backlog = $_POST['product_backlogs'];
-					
+
 					$tmp_user_id = null;
-					$tmpPb = $agilemantis_pb->getProductBacklogs( 
+					$tmpPb = $agilemantis_pb->getProductBacklogs(
 											$agilemantis_team->product_backlog );
 					if( $tmpPb && sizeof( tmpPb ) === 1 ) {
 						$tmp_user_id = $tmpPb[0]['user_id'];
 					}
-					
+
 					$agilemantis_team->id = ( int ) $_POST['id'];
 					$agilemantis_team->editTeam();
 					if( $tmp_user_id ) {
@@ -184,39 +188,39 @@ if( empty($_POST) || $_POST['back_button'] ) {
 				} else {
 					$system = plugin_lang_get( 'edit_teams_error_923200' );
 				}
-				if( $_SESSION['hasUser'] == 1 && ( int ) $agilemantis_team->id > 0 
-						&& $_POST['product_backlogs'] > 0 
-						&& $_POST['user'] == 0 
-						&& $_POST['manager'] == 0 
-						&& $_POST['customer'] == 0 
-						&& $_POST['developer'] == 0 
-						&& $_POST['old_product_owner'] == $_POST['product_owner'] 
+				if( $_SESSION['hasUser'] == 1 && ( int ) $agilemantis_team->id > 0
+						&& $_POST['product_backlogs'] > 0
+						&& $_POST['user'] == 0
+						&& $_POST['manager'] == 0
+						&& $_POST['customer'] == 0
+						&& $_POST['developer'] == 0
+						&& $_POST['old_product_owner'] == $_POST['product_owner']
 						&& $_POST['old_scrum_master'] == $_POST['scrum_master'] ) {
-					
+
 					$_SESSION['hasUser'] = 0;
 					header( "Location: " . plugin_page( 'teams.php' ) );
 				}
 			}
 		}
-		
+
 	}
-	
+
 	# delete one team member
-	if( $_POST['deleteTeamMember'] != "" && ( int ) $_POST['id'] > 0 
+	if( $_POST['deleteTeamMember'] != "" && ( int ) $_POST['id'] > 0
 			&& ( int ) $_POST['user_id'] > 0 && ( int ) $_POST['role_id'] > 0 ) {
-		
-		$agilemantis_team->deleteSelectedTeamMember( 
+
+		$agilemantis_team->deleteSelectedTeamMember(
 						$_POST['id'], $_POST['user_id'], $_POST['role_id'] );
 	}
-	
+
 	if( $_POST['edit'] ) {
 		$agilemantis_team->id = ( int ) implode( ',', array_flip( $_POST['edit'] ) );
 	}
-	
+
 	if( ( int ) $_POST['id'] > 0 ) {
 		$agilemantis_team->id = ( int ) $_POST['id'];
 	}
-	
+
 	if( ( int ) $agilemantis_team->id > 0 ) {
 		$t = $agilemantis_team->getSelectedTeam();
 	}
@@ -244,15 +248,15 @@ if( empty($_POST) || $_POST['back_button'] ) {
 			</tr>
 			<tr <?php echo helper_alternate_class() ?>>
 				<td class="category" width="30%">*Name</td>
-				
-				<?php 
-				if($t[0]['name']) { 
+
+				<?php
+				if($t[0]['name']) {
 					$t_team_name = $t[0]['name'];
 				} else {
-					$t_team_name = $_POST['t_name']; 
+					$t_team_name = $_POST['t_name'];
 				}
 				?>
-				
+
 				<td class="left" width="70%"><input type="text" size="105"
 					maxlength="128" name="t_name"
 					value="<?php echo $t_team_name ?>">
@@ -263,23 +267,23 @@ if( empty($_POST) || $_POST['back_button'] ) {
 				<td class="category">
 			<?php echo plugin_lang_get( 'common_description' )?>
 		</td>
-				<?php   
+				<?php
 				if( $t[0]['description'] ) {
 					$t_descr = $t[0]['description'];
 				} else {
 					$t_descr = $_POST['t_description'];
 				}
 				?>
-		
-				<td class="left"><textarea name="t_description" 
+
+				<td class="left"><textarea name="t_description"
 						cols="80" rows="10"><?php echo string_display_line($t_descr) ?></textarea>
 				</td>
 			</tr>
 			<tr <?php echo helper_alternate_class() ?>>
 				<td class="category">*Product Backlog</td>
 				<td class="left">
-			<?php 
-				if( $agilemantis_team->hasSprints( $agilemantis_team->id ) > 0 
+			<?php
+				if( $agilemantis_team->hasSprints( $agilemantis_team->id ) > 0
 						&& $agilemantis_team->id > 0){
 					$disable_product_backlog = 'disabled';
 				} else {
@@ -292,13 +296,13 @@ if( empty($_POST) || $_POST['back_button'] ) {
 			<?php }?>
 			<select name="product_backlogs" <?php echo $disable_product_backlog?>>
 						<option><?php echo plugin_lang_get( 'common_chose' )?></option>
-				<?php 
+				<?php
 					$data = $agilemantis_team->getProductBacklogs();
 					foreach( $data AS $num => $row ) {
 				?>
 					<option value="<?php echo $row['id']?>"
-							<?php 
-								if( $t[0]['pb_id']==$row['id'] ) { 
+							<?php
+								if( $t[0]['pb_id']==$row['id'] ) {
 									echo 'selected';
 									$name=string_display_line($row['name']);
 								}
@@ -312,13 +316,13 @@ if( empty($_POST) || $_POST['back_button'] ) {
 			<tr <?php echo helper_alternate_class() ?>>
 						<td class="category">Daily Scrum Meeting mit Taskboard</td>
 						<td class="left"><input type="checkbox" name="daily_scrum"
-							<?php 
-								if( $t[0]['daily_scrum'] == 1 
-									|| (plugin_config_get('gadiv_daily_scrum') == 1 
+							<?php
+								if( $t[0]['daily_scrum'] == 1
+									|| (plugin_config_get('gadiv_daily_scrum') == 1
 										&& $t[0]['id'] == 0 ) ) { ?>
 							checked <?php }?> value="1"></td>
 					</tr>
-			<?php }?>	
+			<?php }?>
 			<tr>
 				<td><span class="required"> * <?php echo lang_get( 'required' ) ?></span>
 				</td>
@@ -339,8 +343,8 @@ if( empty($_POST) || $_POST['back_button'] ) {
 <div class="table-container">
 	<table align="center" class="width75" cellspacing="1">
 		<tr <?php echo helper_alternate_class() ?>>
-		
-		
+
+
 		<tr>
 			<td class="form-title" colspan="2">Team User</td>
 		</tr>
@@ -367,13 +371,13 @@ if( empty($_POST) || $_POST['back_button'] ) {
 					<input type="hidden" name="old_product_owner"
 						value="<?php echo $opoid?>"> <select name="product_owner">
 						<option value="0"><?php echo plugin_lang_get( 'common_chose' )?></option>
-						<?php 
+						<?php
 						$team_user = $agilemantis_au->getAgileUser();
 						foreach( $team_user AS $num => $row ) { ?>
 						<option value="<?php echo $row['id']?>"
-							<?php 
-								if( $agilemantis_team->getTeamProductOwner() == $row['id'] ) { 
-									echo 'selected'; 
+							<?php
+								if( $agilemantis_team->getTeamProductOwner() == $row['id'] ) {
+									echo 'selected';
 									$opoid = $row['id'];
 								}?>>
 								<?php echo empty( $row['realname'] ) ? $row['username'] : $row['realname'] ?></option>
@@ -401,12 +405,12 @@ if( empty($_POST) || $_POST['back_button'] ) {
 					<input type="hidden" name="old_scrum_master"
 						value="<?php echo $oscid?>"> <select name="scrum_master">
 						<option value="0"><?php echo plugin_lang_get( 'common_chose' )?></option>
-					<?php 
+					<?php
 						$team_user = $agilemantis_au->getAgileUser();
 						foreach( $team_user AS $num => $row ) { ?>
 					<option value="<?php echo $row['id']?>"
-							<?php 
-								if( $agilemantis_team->getTeamScrumMaster() == $row['id'] ) { 
+							<?php
+								if( $agilemantis_team->getTeamScrumMaster() == $row['id'] ) {
 									echo 'selected';$oscid = $row['id'];
 								}?>>
 								<?php echo empty( $row['realname'] ) ? $row['username'] : $row['realname'] ?></option>
@@ -422,7 +426,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 <div class="table-container">
 	<table align="center" class="width75" cellspacing="1">
 		<tr <?php echo helper_alternate_class() ?>>
-			<td class="form-title" colspan="4"><a name="Developer"><?php 
+			<td class="form-title" colspan="4"><a name="Developer"><?php
 						echo plugin_lang_get( 'edit_team_developer' )?></a>
 			</td>
 		</tr>
@@ -454,9 +458,9 @@ if( empty($_POST) || $_POST['back_button'] ) {
 						}
 					}
 				}
-				
+
 				# team members with an open task cannot be deleted
-				if( $agilemantis_team->memberHasOpenTasks( 
+				if( $agilemantis_team->memberHasOpenTasks(
 									$agilemantis_team->id,$row['id'] ) == false ) {
 					if( $do_not_delete_last_member == false ) {
 				?>
@@ -476,10 +480,10 @@ if( empty($_POST) || $_POST['back_button'] ) {
 				?>
 			</td>
 		</tr>
-	<?php 
-	
+	<?php
+
 			}
-		} 
+		}
 	?>
 		<tr>
 			<td class="left">
@@ -489,13 +493,13 @@ if( empty($_POST) || $_POST['back_button'] ) {
 						type="hidden" name="id" value="<?php echo $agilemantis_team->id?>">
 					<select name="developer">
 						<option value="0"><?php echo plugin_lang_get( 'common_chose' )?></option>
-					<?php 
+					<?php
 					$team_user = $agilemantis_au->getAgileUser( true );
-					
+
 					foreach( $team_user AS $num => $row ) {
 						if( $row['developer'] == 1 ) {
 					?>
-					<option value="<?php echo $row['id']?>"><?php 
+					<option value="<?php echo $row['id']?>"><?php
 					  echo empty( $row['realname'] ) ? $row['username'] : $row['realname'] ?></option>
 					<?php
 						}
@@ -512,7 +516,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 <div class="table-container">
 	<table align="center" class="width75" cellspacing="1">
 		<tr <?php echo helper_alternate_class() ?>>
-			<td class="form-title" colspan="4"><a name="ProductUser"><?php 
+			<td class="form-title" colspan="4"><a name="ProductUser"><?php
 				echo plugin_lang_get( 'edit_team_product_user' )?></a>
 			</td>
 		</tr>
@@ -544,9 +548,9 @@ if( empty($_POST) || $_POST['back_button'] ) {
 				</form>
 			</td>
 		</tr>
-	<?php 
+	<?php
 			}
-		} 
+		}
 	?>
 		<tr>
 			<td class="left">
@@ -560,7 +564,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 					$team_user = $agilemantis_au->getAgileUser();
 					foreach( $team_user AS $num => $row ) {
 					?>
-					<option value="<?php echo $row['id']?>"><?php 
+					<option value="<?php echo $row['id']?>"><?php
 					  echo empty( $row['realname'] ) ? $row['username'] : $row['realname'] ?></option>
 					<?php
 					}
@@ -606,9 +610,9 @@ if( empty($_POST) || $_POST['back_button'] ) {
 				</form>
 			</td>
 		</tr>
-	<?php 
+	<?php
 			}
-		} 
+		}
 	?>
 		<tr>
 			<td class="left">
@@ -622,7 +626,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 					$team_user = $agilemantis_au->getAgileUser();
 					foreach( $team_user AS $num => $row ) {
 					?>
-					<option value="<?php echo $row['id']?>"><?php 
+					<option value="<?php echo $row['id']?>"><?php
 						echo empty( $row['realname'] ) ? $row['username'] : $row['realname'] ?></option>
 					<?php
 					}
@@ -670,9 +674,9 @@ if( empty($_POST) || $_POST['back_button'] ) {
 				</form>
 			</td>
 		</tr>
-	<?php 
+	<?php
 			}
-		} 
+		}
 	?>
 		<tr>
 			<td class="left">
@@ -686,7 +690,7 @@ if( empty($_POST) || $_POST['back_button'] ) {
 					$team_user = $agilemantis_au->getAgileUser();
 					foreach( $team_user AS $num => $row ) {
 					?>
-					<option value="<?php echo $row['id']?>"><?php 
+					<option value="<?php echo $row['id']?>"><?php
 					  echo empty( $row['realname'] ) ? $row['username'] : $row['realname'] ?></option>
 					<?php
 					}
@@ -699,4 +703,5 @@ if( empty($_POST) || $_POST['back_button'] ) {
 	</table>
 </div>
 <?php }?>
-<?php html_page_bottom() ?>
+<?php
+layout_page_end();
