@@ -215,19 +215,16 @@ print_manage_menu( 'manage_plugin_page.php' );
 				</center></td>
 			<td class="category"><center>
 					<b><?php echo plugin_lang_get( 'manage_user_developer' )?>
-
-
-
-				</center> </b></td>
+				</b></center></td>
 			<td class="category"><center>
 					<b><?php echo plugin_lang_get( 'manage_user_administrator' )?>
-				</center> </b></td>
+				</b></center></td>
 				<?php
 					if(plugin_is_loaded('agileMantisExpert')){
 				?>
 				<td class="category"><center>
 					<b><?php echo plugin_lang_get( 'manage_user_expert' )?>
-				</center> </b></td>
+				</b></center></td>
 				<?php
 					}
 				?>
