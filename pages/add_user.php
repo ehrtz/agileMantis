@@ -82,82 +82,88 @@ if( $_POST['action'] == 'addUser' ) {
 ?>
 
 <?php if(user_get_name(auth_get_current_user_id()) == 'administrator'){?>
-<br>
-<div align="center">
-	<form method="post" action="<?php echo plugin_page("add_user.php")?>"
-		method="post">
+<div class="space-10"></div>
+<div class="form-container">
+	<form method="post" action="<?php echo plugin_page("add_user.php")?>">
 		<input type="hidden" name="action" value="addUser">
 		<div class="table-container">
 			<table class="width50" cellspacing="1">
 				<tr>
 					<td class="form-title" colspan="2">
-		<?php echo lang_get( 'create_new_account_title' ) ?>
-	</td>
+						<?php echo lang_get( 'create_new_account_title' ) ?>
+					</td>
 				</tr>
 				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category" width="25%">
-		<?php echo lang_get( 'username' ) ?>
-	</td>
+						<?php echo lang_get( 'username' ) ?>
+					</td>
 					<td width="75%"><input type="text" name="username" size="32"
 						maxlength="<?php echo DB_FIELD_SIZE_USERNAME;?>" /></td>
 				</tr>
-<?php
-	if ( !$t_ldap || config_get( 'use_ldap_realname' ) == OFF ) {
-?>
-<tr <?php echo helper_alternate_class() ?>>
+				<?php
+					if ( !$t_ldap || config_get( 'use_ldap_realname' ) == OFF ) {
+				?>
+				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
-		<?php echo lang_get( 'realname' ) ?>
-	</td>
-					<td><input type="text" name="realname" size="32"
-						maxlength="<?php echo DB_FIELD_SIZE_REALNAME;?>" /></td>
+						<?php echo lang_get( 'realname' ) ?>
+					</td>
+					<td><input type="text" name="realname" size="32" maxlength="<?php echo DB_FIELD_SIZE_REALNAME;?>" /></td>
 				</tr>
-<?php
-	}
+				<?php
+					}
 
-	if ( !$t_ldap || config_get( 'use_ldap_email' ) == OFF ) {
-?>
-<tr <?php echo helper_alternate_class() ?>>
+				if ( !$t_ldap || config_get( 'use_ldap_email' ) == OFF ) {
+				?>
+				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
-		<?php echo lang_get( 'email' ) ?>
-	</td>
+						<?php echo lang_get( 'email' ) ?>
+					</td>
 					<td>
-		<?php print_email_input( 'email', '' ) ?>
-	</td>
+						<?php print_email_input( 'email', '' ) ?>
+					</td>
 				</tr>
-<?php
-	}
-?>
-<tr <?php echo helper_alternate_class() ?>>
+				<?php
+					}
+				?>
+				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
-		<?php echo lang_get( 'password' ) ?>
-	</td>
-					<td><input type="password" name="password" size="32"
-						maxlength="<?php echo auth_get_password_max_size();?>" /></td>
+						<?php echo lang_get( 'password' ) ?>
+					</td>
+					<td>
+						<input type="password" name="password" size="32" maxlength="<?php echo auth_get_password_max_size();?>" />
+					</td>
 				</tr>
 				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
-		<?php echo lang_get( 'verify_password' ) ?>
-	</td>
-					<td><input type="password" name="password_verify" size="32"
-						maxlength="<?php echo auth_get_password_max_size();?>" /></td>
+						<?php echo lang_get( 'verify_password' ) ?>
+					</td>
+					<td>
+						<input type="password" name="password_verify" size="32" maxlength="<?php echo auth_get_password_max_size();?>" />
+					</td>
 				</tr>
 				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
-		<?php echo plugin_lang_get( 'manage_user_participant' )?>
-	</td>
-					<td><input type="checkbox" name="participant" value="1"></td>
+						<?php echo plugin_lang_get( 'manage_user_participant' )?>
+					</td>
+					<td>
+						<input type="checkbox" name="participant" value="1">
+					</td>
 				</tr>
 				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
-		<?php echo plugin_lang_get( 'manage_user_developer' )?>
-	</td>
-					<td><input type="checkbox" name="developer" value="1"></td>
+						<?php echo plugin_lang_get( 'manage_user_developer' )?>
+					</td>
+					<td>
+						<input type="checkbox" name="developer" value="1">
+					</td>
 				</tr>
 				<tr <?php echo helper_alternate_class() ?>>
 					<td class="category">
-		<?php echo plugin_lang_get( 'manage_user_administrator' )?>
-	</td>
-					<td><input type="checkbox" name="administrator" value="1"></td>
+						<?php echo plugin_lang_get( 'manage_user_administrator' )?>
+					</td>
+					<td>
+						<input type="checkbox" name="administrator" value="1">
+					</td>
 				</tr>
 				<tr>
 					<td class="center" colspan="2"><input type="submit" class="button"
@@ -169,6 +175,7 @@ if( $_POST['action'] == 'addUser' ) {
 		</div>
 	</form>
 </div>
+
 <?php } else {
 	echo '<br><center><span class="message_error">'.
 			plugin_lang_get( 'info_error_921001' ).'</span></center>';
