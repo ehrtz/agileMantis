@@ -130,7 +130,8 @@ print_manage_menu( 'manage_plugin_page.php' );
 				</tr>';
 	}
 	?>
-
+<div class="col-md-12 col-xs-12">
+	<div class="space-10"></div>
 <div class="table-container">
 	<table align="center" class="width75" cellspacing="1">
 		<tr>
@@ -180,106 +181,103 @@ print_manage_menu( 'manage_plugin_page.php' );
 		</tr>
 	</table>
 </div>
-<br>
-<div class="table-container">
-	<table align="center" class="width100" cellspacing="1">
-		<tr>
-			<td
-				colspan="<?php
-					if( plugin_is_loaded( 'agileMantisExpert' ) ) {
-						echo '6';
-					} else {
-						echo '5';
-					};?>">
-				<b><?php echo plugin_lang_get( 'manage_user_title' )?></b>
-					<?php if( user_get_name( auth_get_current_user_id() ) == 'administrator' ) { ?>
-					<form action="<?php echo plugin_page( "add_user.php" ) ?>"
-					method="post">
-					<input type="submit" name="submit"
-						value="<?php echo plugin_lang_get( 'manage_user_add_new_user' )?>">
-				</form>
-					<?php } ?>
-				</td>
-		</tr>
-		<tr>
-			<td class="category"><b><a
-					href="<?php echo plugin_page("agileuser.php")?>&sort_by=username"><?php
-							echo plugin_lang_get( 'manage_user_username' )?></a></b></td>
-			<td class="category"><b><a
-					href="<?php echo plugin_page("agileuser.php")?>&sort_by=realname"><?php
-							echo plugin_lang_get( 'manage_user_realname' )?></a></b></td>
-			<td class="category"><b><a
-					href="<?php echo plugin_page("agileuser.php")?>&sort_by=email">Email</a></b></td>
-			<td class="category"><center>
-					<b><?php echo plugin_lang_get( 'manage_user_participant' )?></b>
-				</center></td>
-			<td class="category"><center>
-					<b><?php echo plugin_lang_get( 'manage_user_developer' )?>
-				</b></center></td>
-			<td class="category"><center>
-					<b><?php echo plugin_lang_get( 'manage_user_administrator' )?>
-				</b></center></td>
-				<?php
-					if(plugin_is_loaded('agileMantisExpert')){
-				?>
-				<td class="category"><center>
-					<b><?php echo plugin_lang_get( 'manage_user_expert' )?>
-				</b></center></td>
-				<?php
-					}
-				?>
-			</tr>
-		<form action="<?php echo plugin_page('save_agileusers.php')?>"
-			method="post">
-			<input type="hidden" name="action" value="save">
-				<?php
-					if( !empty($user) ) {
-						foreach( $user AS $num => $row ) {
-							$mantis_role = $agilemantis_au->getAdditionalUserFields( $row['id'] );
-				?>
-				<?php if( $_POST['agileMantisParticipant'] && $mantis_role[0]['participant'] == 1 ) {?>
-					<?php echo createTableView($row['id'], $row['username'], $row['realname'],
-								$row['email'], $mantis_role[0]['participant'],
-								$mantis_role[0]['developer'], $mantis_role[0]['administrator'],
-								$mantis_role[0]['expert'])?>
-				<?php }?>
-				<?php if( $_POST['agileMantisAdmin'] && $mantis_role[0]['administrator'] == 1 ) { ?>
-					<?php echo createTableView($row['id'], $row['username'], $row['realname'],
-								$row['email'], $mantis_role[0]['participant'],
-								$mantis_role[0]['developer'], $mantis_role[0]['administrator'],
-								$mantis_role[0]['expert'])?>
-				<?php }?>
-				<?php if( $_POST['agileMantisDeveloper'] && $mantis_role[0]['developer'] == 1 ) { ?>
-					<?php echo createTableView($row['id'], $row['username'], $row['realname'],
-								$row['email'], $mantis_role[0]['participant'],
-								$mantis_role[0]['developer'], $mantis_role[0]['administrator'],
-								$mantis_role[0]['expert'] ) ?>
-				<?php }?>
-				<?php if( $_POST['agileMantisAdmin'] == "" && $_POST['agileMantisParticipant'] == ""
-								&& $_POST['agileMantisDeveloper'] == "" ) { ?>
-					<?php echo createTableView($row['id'], $row['username'], $row['realname'],
-								$row['email'], $mantis_role[0]['participant'],
-								$mantis_role[0]['developer'], $mantis_role[0]['administrator'],
-								$mantis_role[0]['expert'])?>
-				<?php }?>
-				<?php
-						}
-					}
-				?>
-				<tr>
-				<td
-					colspan="<?php
-						if( plugin_is_loaded('agileMantisExpert' ) ) {
-							echo '6';
-						} else {
-							echo '5';
-						};?>"><center>
-						<input type="submit" name="edit"
-							value="<?php echo plugin_lang_get( 'button_save' )?>">
-					</center></td>
-			</tr>
-		</form>
-	</table>
+	<div class="space-10"></div>
+	<!--  -->
+	<form action="<?php echo plugin_page('save_agileusers.php')?>" method="post">
+		<div class="widget-box widget-color-blue2">
+			<div class="widget-header widget-header-small">
+				<h4 class="widget-title lighter">
+					<i class="ace-icon fa fa-users"></i>
+					<?php echo plugin_lang_get( 'manage_user_title' ) ?>
+				</h4>
+			</div>
+			<div class="widget-body">
+				<div class="widget-toolbox padding-8 clearfix">
+					<div id="manage-user-div" class="form-container">
+						<div class="pull-left">
+						<?php print_link_button( plugin_page( "add_user.php" ), plugin_lang_get( 'manage_user_add_new_user' ), 'btn-sm' ) ?>
+						</div>
+					</div>
+				</div>
+				<div class="widget-main no-padding">
+	                <div class="table-responsive">
+						<table class="table table-striped table-bordered table-condensed table-hover">
+							<tr>
+								<td class="category"><b><a
+										href="<?php echo plugin_page("agileuser.php")?>&sort_by=username"><?php
+												echo plugin_lang_get( 'manage_user_username' )?></a></b></td>
+								<td class="category"><b><a
+										href="<?php echo plugin_page("agileuser.php")?>&sort_by=realname"><?php
+												echo plugin_lang_get( 'manage_user_realname' )?></a></b></td>
+								<td class="category"><b><a
+										href="<?php echo plugin_page("agileuser.php")?>&sort_by=email">Email</a></b></td>
+								<td class="category"><center>
+										<b><?php echo plugin_lang_get( 'manage_user_participant' )?></b>
+									</center></td>
+								<td class="category"><center>
+										<b><?php echo plugin_lang_get( 'manage_user_developer' )?>
+									</b></center></td>
+								<td class="category"><center>
+										<b><?php echo plugin_lang_get( 'manage_user_administrator' )?>
+									</b></center></td>
+									<?php
+										if(plugin_is_loaded('agileMantisExpert')){
+									?>
+									<td class="category"><center>
+										<b><?php echo plugin_lang_get( 'manage_user_expert' )?>
+									</b></center></td>
+									<?php
+										}
+									?>
+								</tr>
+								<input type="hidden" name="action" value="save">
+									<?php
+										if( !empty($user) ) {
+											foreach( $user AS $num => $row ) {
+												$mantis_role = $agilemantis_au->getAdditionalUserFields( $row['id'] );
+									?>
+									<?php if( $_POST['agileMantisParticipant'] && $mantis_role[0]['participant'] == 1 ) {?>
+										<?php echo createTableView($row['id'], $row['username'], $row['realname'],
+													$row['email'], $mantis_role[0]['participant'],
+													$mantis_role[0]['developer'], $mantis_role[0]['administrator'],
+													$mantis_role[0]['expert'])?>
+									<?php }?>
+									<?php if( $_POST['agileMantisAdmin'] && $mantis_role[0]['administrator'] == 1 ) { ?>
+										<?php echo createTableView($row['id'], $row['username'], $row['realname'],
+													$row['email'], $mantis_role[0]['participant'],
+													$mantis_role[0]['developer'], $mantis_role[0]['administrator'],
+													$mantis_role[0]['expert'])?>
+									<?php }?>
+									<?php if( $_POST['agileMantisDeveloper'] && $mantis_role[0]['developer'] == 1 ) { ?>
+										<?php echo createTableView($row['id'], $row['username'], $row['realname'],
+													$row['email'], $mantis_role[0]['participant'],
+													$mantis_role[0]['developer'], $mantis_role[0]['administrator'],
+													$mantis_role[0]['expert'] ) ?>
+									<?php }?>
+									<?php if( $_POST['agileMantisAdmin'] == "" && $_POST['agileMantisParticipant'] == ""
+													&& $_POST['agileMantisDeveloper'] == "" ) { ?>
+										<?php echo createTableView($row['id'], $row['username'], $row['realname'],
+													$row['email'], $mantis_role[0]['participant'],
+													$mantis_role[0]['developer'], $mantis_role[0]['administrator'],
+													$mantis_role[0]['expert'])?>
+									<?php }?>
+									<?php
+											}
+										}
+									?>
+									<tr>
+						</table>
+					</div>
+				</div>
+				<div class="widget-toolbox padding-8 clearfix">
+					<!-- <div class="btn-toolbar pull-right"> -->
+						<input type="submit" name="edit" class="btn btn-primary btn-white btn-round" value="<?php echo plugin_lang_get( 'button_save' ) ?>" />
+					<!-- </div> -->
+				</div>
+			</div>
+		</div>
+	</form>
+	<!--  -->
 </div>
 <?php
 	} else {
