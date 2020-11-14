@@ -44,7 +44,7 @@ $no = plugin_lang_get( 'manage_user_su_no' );
 // Only if above condition does not apply.
 $rsUser = $agilemantis_au->getAllUser();
 foreach( $rsUser as $num => $usr ) {
-	$i = $usr[id];
+	$i = $usr['id'];
 
 	if( $_POST['participant'][$i] == 1 || $_POST['developer'][$i] == 1 ) {
 		$particpant = 1;
@@ -87,7 +87,7 @@ for( $j = 0; $j <= 5; $j++ ) {
 $retMax = 0;
 
 foreach( $rsUser as $num => $usr ) {
-	$i = $usr[id];
+	$i = $usr['id'];
 
 	$ret = $agilemantis_au->checkChangeRightsAllowed( $i, $_SESSION['participant'][$i],
 		$_SESSION['developer'][$i], $_SESSION['administrator'][$i] );

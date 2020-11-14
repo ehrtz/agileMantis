@@ -43,7 +43,7 @@ print_manage_menu( 'manage_plugin_page.php' );
 		if( $_SESSION['expert'] == "" ) {
 			$rsUser = $agilemantis_au->getAllUser();
 			foreach( $rsUser as $num => $usr ) {
-				$i = $usr[id];
+				$i = $usr['id'];
 
 				if( $_SESSION['participant'][$i] == 1 || $_SESSION['developer'][$i] == 1 ) {
 					$particpant = 1;
