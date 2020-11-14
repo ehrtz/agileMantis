@@ -47,45 +47,27 @@ if( $_POST['action'] == 'addUser' ) {
 		$f_access_level = 25;
 	}
 
-	# check for empty username
-	$f_username = trim( $f_username );
-	if( is_blank( $f_username ) ) {
-		trigger_error( ERROR_EMPTY_FIELD, ERROR );
-	}
+	$t_data = array(
+		'query' => array(),
+		'payload' => array(
+			'username' => $f_username,
+			'email' => $f_email,
+			'access_level' => array( 'id' => $f_access_level ),
+			'real_name' => $f_realname,
+			'password' => $f_password,
+			'protected' => $f_protected,
+			'enabled' => $f_enabled
+		)
+	);
 
-	# Check the name for validity here so we do it before promting to use a
-	#  blank password (don't want to prompt the user if the process will fail
-	#  anyway)
-	# strip extra space from real name
-	$t_realname = string_normalize( $f_realname );
-	user_ensure_name_valid( $f_username );
-	user_ensure_realname_valid( $t_realname );
-	user_ensure_realname_unique( $f_username, $f_realname );
-
-	if( $f_password != $f_password_verify ) {
-		trigger_error( ERROR_USER_CREATE_PASSWORD_MISMATCH, ERROR );
-	}
-
-	$f_email = email_append_domain( $f_email );
-	email_ensure_not_disposable( $f_email );
-
-	if( is_blank( $f_password ) ) {
-		helper_ensure_confirmed( lang_get( 'empty_password_sure_msg' ),
-								lang_get( 'empty_password_button' ) );
-	}
-
-	lang_push( config_get( 'default_language' ) );
-
-	$t_admin_name = user_get_name( auth_get_current_user_id() );
-	$t_cookie = user_create( $f_username, $f_password, $f_email,
-				$f_access_level, $f_protected, $f_enabled, $t_realname, $t_admin_name );
+	$t_command = new UserCreateCommand( $t_data );
+	$t_result = $t_command->execute();
 
 	# set language back to user language
 	lang_pop();
 
-	$t_user_id = user_get_id_by_name( $f_username );
+	$t_user_id = $t_result['id'];
 
-	user_set_password( $t_user_id, $f_password, false );
 	$agilemantis_au->setAgileMantisUserRights(
 				$t_user_id, $_POST['participant'], $_POST['developer'], $_POST['administrator'] );
 
