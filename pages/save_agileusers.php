@@ -1,7 +1,7 @@
 <?php
 # This file is part of agileMantis.
 #
-# Developed by: 
+# Developed by:
 # gadiv GmbH
 # Bövingen 148
 # 53804 Much
@@ -9,7 +9,7 @@
 #
 # Email: agilemantis@gadiv.de
 #
-# Copyright (C) 2012-2014 gadiv GmbH 
+# Copyright (C) 2012-2014 gadiv GmbH
 #
 # agileMantis is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -45,21 +45,21 @@ $no = plugin_lang_get( 'manage_user_su_no' );
 $rsUser = $agilemantis_au->getAllUser();
 foreach( $rsUser as $num => $usr ) {
 	$i = $usr[id];
-	
+
 	if( $_POST['participant'][$i] == 1 || $_POST['developer'][$i] == 1 ) {
 		$particpant = 1;
 	} else {
 		$particpant = 0;
 	}
 	$_SESSION['participant'][$i] = $particpant;
-	
+
 	if( $_POST['developer'][$i] == 1 ) {
 		$developer = 1;
 	} else {
 		$developer = 0;
 	}
 	$_SESSION['developer'][$i] = $developer;
-	
+
 	if( $_POST['administrator'][$i] == 1 ) {
 		$administrator = 1;
 	} else {
@@ -88,15 +88,15 @@ $retMax = 0;
 
 foreach( $rsUser as $num => $usr ) {
 	$i = $usr[id];
-	
-	$ret = $agilemantis_au->checkChangeRightsAllowed( $i, $_SESSION['participant'][$i], 
+
+	$ret = $agilemantis_au->checkChangeRightsAllowed( $i, $_SESSION['participant'][$i],
 		$_SESSION['developer'][$i], $_SESSION['administrator'][$i] );
 	if( $ret > $retMax )
 		$retMax = $ret;
-		
+
 		# Get name of User and store it for output for warnings/confirms
 	$username = $agilemantis_au->getUserName( ( int ) $i );
-	
+
 	$toggle[$ret] = ($toggle[$ret] + 1) % 2; // Alternate colors of table rows
 	$users[$ret] .= '<tr ' .
 		 helper_alternate_class( $toggle[$ret] ) . '><td> <b>' . $username . "</b></td></tr>";
@@ -108,7 +108,11 @@ $users[3] = $users[3] . "</table></div>";
 $users[4] = $users[4] . "</table></div>";
 $users[5] = $users[5] . "</table></div>";
 
-html_page_top( plugin_lang_get( 'manage_user_title' ) ); 
+layout_page_header( plugin_lang_get( 'manage_user_title' ) );
+
+layout_page_begin( plugin_page( 'info.php' ) );
+
+print_manage_menu( 'manage_plugin_page.php' );
 
 ?>
 <br>
@@ -187,7 +191,7 @@ html_page_top( plugin_lang_get( 'manage_user_title' ) );
 		</div>
 <?php }
 
-	if ( $retMax == 2 ) { 
+	if ( $retMax == 2 ) {
 		echo plugin_lang_get( 'manage_user_su_is_stakeholder'); ?>
 	<br>
 		<br>
@@ -252,6 +256,5 @@ html_page_top( plugin_lang_get( 'manage_user_title' ) );
 </div>
 
 
-<?php html_page_bottom(); ?>
-
-
+<?php
+layout_page_end();
