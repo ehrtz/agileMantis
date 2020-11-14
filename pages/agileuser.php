@@ -27,7 +27,7 @@
 
 layout_page_header( plugin_lang_get( 'manage_user_title' ) );
 
-layout_page_begin( 'info.php' );
+layout_page_begin( plugin_page( 'info.php' ) );
 
 print_manage_menu( 'manage_plugin_page.php' );
 
