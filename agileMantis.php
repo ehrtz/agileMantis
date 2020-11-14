@@ -1273,11 +1273,11 @@ class agileMantisPlugin extends MantisPlugin {
 
 		function event_layout_resources() {
 
-			echo '<link rel="stylesheet" href="'.AGILEMANTIS_PLUGIN_URL.'css/agileMantis.css">';
-			echo '<link rel="stylesheet" href="'.AGILEMANTIS_PLUGIN_URL.'css/jquery-ui.css">';
-			echo '<script src="' . AGILEMANTIS_PLUGIN_URL . 'js/jquery-1.9.1.js"></script>';
-			echo '<script src="' . AGILEMANTIS_PLUGIN_URL . 'js/jquery-ui.js"></script>';
-			echo '<script src="' . AGILEMANTIS_PLUGIN_URL . 'js/agileMantisActions.js"></script>';
+			echo '<link rel="stylesheet" href="'. plugin_file( 'css/agileMantis.css') . '">';
+			echo '<link rel="stylesheet" href="'. plugin_file( 'css/jquery-ui.css' ) . '">';
+			echo '<script src="' . plugin_file( 'js/jquery-1.9.1.js' ) . '"></script>';
+			echo '<script src="' . plugin_file( 'js/jquery-ui.js' ) . '"></script>';
+			echo '<script src="' . plugin_file( 'js/agileMantisActions.js' ) . '"></script>';
 		}
 
 		/**
