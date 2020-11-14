@@ -1264,7 +1264,7 @@ class agileMantisPlugin extends MantisPlugin {
 				echo '</td><td valign="middle">', "\n\t", '<div align="right">';
 				echo '<a href="http://www.gadiv.de/de/opensource/agilemantis/agilemantisen.html" ' .
 					 'title="agileMantis auf gadiv-Webseite" target="_blank"><img src="'.
-					 AGILEMANTIS_PLUGIN_URL.'images/agilemantis_logo.gif" width="32" height="32" ' .
+					 plugin_file( 'images/agilemantis_logo.gif') . '" width="32" height="32" ' .
 					 'alt="gadiv GmbH Logo" border="0"/></a>';
 				echo '', "\n", '</div></td></tr></table></div>', "\n";
 				echo "\t", '<hr size="1" />', "\n";
